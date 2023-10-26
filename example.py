@@ -1,13 +1,11 @@
 import numpy as np
-
 from spotlight.datasets.movielens import get_movielens_dataset
-
-dataset = get_movielens_dataset(variant='100K')
-
-
+from spotlight.cross_validation import random_train_test_split
+from spotlight.evaluation import rmse_score
+from spotlight.factorization.explicit import ExplicitFactorizationModel
 import torch
 
-from spotlight.factorization.explicit import ExplicitFactorizationModel
+dataset = get_movielens_dataset(variant='100K')
 
 model = ExplicitFactorizationModel(loss='regression',
                                    embedding_dim=128,  # latent dimensionality
@@ -17,19 +15,13 @@ model = ExplicitFactorizationModel(loss='regression',
                                    learning_rate=1e-3,
                                    use_cuda=torch.cuda.is_available())
 
-
-from spotlight.cross_validation import random_train_test_split
-
 train, test = random_train_test_split(dataset, random_state=np.random.RandomState(42))
-
-print('Split into \n {} and \n {}.'.format(train, test))
-
 model.fit(train, verbose=True)
-
-
-from spotlight.evaluation import rmse_score
-
 train_rmse = rmse_score(model, train)
 test_rmse = rmse_score(model, test)
 
 print('Train RMSE {:.3f}, test RMSE {:.3f}'.format(train_rmse, test_rmse))
+
+print("\n\n\n")
+
+print(f"Score: {test_rmse}")
