@@ -3,3 +3,4 @@ h5py
 requests
 scipy
 scikit-learn
+urllib3==1.26.6
