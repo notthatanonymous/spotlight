@@ -2,3 +2,4 @@ numpy
 h5py
 requests
 scipy
+scikit-learn
